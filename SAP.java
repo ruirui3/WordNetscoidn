@@ -20,7 +20,7 @@ public class SAP {
         HashSet<Integer> hashV = new HashSet<Integer>();
         hashV.add(v);
         HashSet<Integer> hashW = new HashSet<Integer>();
-        hashV.add(w);
+        hashW.add(w);
 
         return length(hashV, hashW);
 
@@ -82,7 +82,7 @@ public class SAP {
                 int tempMax = breadv.distTo(i) + breadw.distTo(i);
 
                 if (tempMax < maxLen) {
-                    maxLen = Math.min(tempMax, maxLen);
+                    maxLen = tempMax;
                     ancestor = i;
                 }
 
