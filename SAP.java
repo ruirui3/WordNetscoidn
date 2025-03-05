@@ -71,7 +71,7 @@ public class SAP {
 
         BreadthFirstDirectedPaths breadv = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths breadw = new BreadthFirstDirectedPaths(digraph, w);
-        int maxLen = Integer.MAX_VALUE;
+        int minLen = Integer.MAX_VALUE;
         int ancestor = -1;
 
         for (int i = 0; i < digraph.V(); i++) {
@@ -79,10 +79,10 @@ public class SAP {
             if (breadv.hasPathTo(i) && breadw.hasPathTo(i)) { // see if there is a path of ancestor i connected and
                                                               // loops for number of V
 
-                int tempMax = breadv.distTo(i) + breadw.distTo(i);
+                int tempMin = breadv.distTo(i) + breadw.distTo(i);
 
-                if (tempMax < maxLen) {
-                    maxLen = tempMax;
+                if (tempMin < minLen) {
+                    minLen = tempMin;
                     ancestor = i;
                 }
 
@@ -96,7 +96,7 @@ public class SAP {
 
     // do unit testing of this class
     public static void main(String[] args) {
-        In in = new In(args[0]);
+        In in = new In("wordnet\\digraph1.txt");
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
         while (!StdIn.isEmpty()) {
