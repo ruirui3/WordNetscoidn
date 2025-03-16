@@ -11,6 +11,9 @@ public class SAP {
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
+        if (G == null) {
+            throw new IllegalArgumentException("Diagraph cannot be null!");
+        }
         digraph = new Digraph(G);
     }
 
@@ -30,11 +33,13 @@ public class SAP {
     // -1 if no such path
     public int ancestor(int v, int w) {
 
-        if (length(v, w) >= 1) {
-            return v;
-        }
+        HashSet<Integer> hashV = new HashSet<Integer>();
+        hashV.add(v);
+        HashSet<Integer> hashW = new HashSet<Integer>();
+        hashW.add(w);
 
-        return -1;
+
+        return ancestor(hashV, hashW);
 
     }
 
@@ -42,17 +47,26 @@ public class SAP {
     // w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
 
+        if (v == null || w == null) {
+            throw new IllegalArgumentException();
+        }
+
+        for (Integer integer : v) {
+            if (integer < 0 || integer >= digraph.V()) {
+                throw new IllegalArgumentException();
+            }
+        }
+
         BreadthFirstDirectedPaths breadv = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths breadw = new BreadthFirstDirectedPaths(digraph, w);
+        
         int maxLen = Integer.MAX_VALUE;
 
         for (int i = 0; i < digraph.V(); i++) {
 
             if (breadv.hasPathTo(i) && breadw.hasPathTo(i)) { // see if there is a path of ancestor i connected and
                                                               // loops for number of V
-
                 int tempMax = breadv.distTo(i) + breadw.distTo(i);
-
                 maxLen = Math.min(tempMax, maxLen);
             }
 
@@ -69,6 +83,10 @@ public class SAP {
     // path
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
 
+        if (v == null || w == null) {
+            throw new IllegalArgumentException();
+        }
+        
         BreadthFirstDirectedPaths breadv = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths breadw = new BreadthFirstDirectedPaths(digraph, w);
         int minLen = Integer.MAX_VALUE;
@@ -96,7 +114,7 @@ public class SAP {
 
     // do unit testing of this class
     public static void main(String[] args) {
-        In in = new In("wordnet\\digraph1.txt");
+        In in = new In("wordnet\\digraph2.txt");
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
         while (!StdIn.isEmpty()) {
