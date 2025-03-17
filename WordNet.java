@@ -13,6 +13,10 @@ import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
+/**
+ * @author Rui Zhao attests that this code is their original work and was written in compliance with the class Academic Integrity and Collaboration Policy found in the syllabus. 
+ */
+
 public class WordNet {
 
     private Map<String, List<Integer>> nounToIDs;
@@ -110,7 +114,7 @@ public class WordNet {
             throw new IllegalArgumentException();
         }
 
-        return sap.length(nounToHyp(nounA), nounToHyp(nounB));
+        return sap.length(nounToIDs.get(nounA), nounToIDs.get(nounB));
 
     }
 

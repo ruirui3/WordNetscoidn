@@ -5,6 +5,10 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
+/**
+ * @author Rui Zhao attests that this code is their original work and was written in compliance with the class Academic Integrity and Collaboration Policy found in the syllabus. 
+ */
+
 public class SAP {
 
     private Digraph digraph;
@@ -20,6 +24,14 @@ public class SAP {
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
 
+        if (v < 0 || v >= digraph.V() || w < 0 || w >= digraph.V()) {
+            throw new IllegalArgumentException();
+        }
+
+        if (v == w) {
+            return 0;
+        }
+
         HashSet<Integer> hashV = new HashSet<Integer>();
         hashV.add(v);
         HashSet<Integer> hashW = new HashSet<Integer>();
@@ -33,6 +45,10 @@ public class SAP {
     // -1 if no such path
     public int ancestor(int v, int w) {
 
+        if (v < 0 || v >= digraph.V() || w < 0 || w >= digraph.V()) {
+            throw new IllegalArgumentException();
+        }
+
         HashSet<Integer> hashV = new HashSet<Integer>();
         hashV.add(v);
         HashSet<Integer> hashW = new HashSet<Integer>();
@@ -43,20 +59,31 @@ public class SAP {
 
     }
 
+    private boolean checkError(Iterable<Integer> list) {
+        for (Integer i : list) {
+            if (i == null || i<0 || i >= digraph.V()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void illegalArgumentThrowing(Iterable<Integer> v, Iterable<Integer> w) {
+        if (v == null || w == null || !checkError(v) || !checkError(w)) {
+            throw new IllegalArgumentException();
+        }
+    }
+    
+
     // length of shortest ancestral path between any vertex in v and any vertex in
     // w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
 
-        if (v == null || w == null) {
-            throw new IllegalArgumentException();
+        illegalArgumentThrowing(v, w);
+        if (!v.iterator().hasNext() || !w.iterator().hasNext()) {
+            return -1;
         }
-
-        for (Integer integer : v) {
-            if (integer < 0 || integer >= digraph.V()) {
-                throw new IllegalArgumentException();
-            }
-        }
-
+        
         BreadthFirstDirectedPaths breadv = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths breadw = new BreadthFirstDirectedPaths(digraph, w);
         
@@ -83,10 +110,10 @@ public class SAP {
     // path
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
 
-        if (v == null || w == null) {
-            throw new IllegalArgumentException();
+        illegalArgumentThrowing(v, w);
+        if (!v.iterator().hasNext() || !w.iterator().hasNext()) {
+            return -1;
         }
-        
         BreadthFirstDirectedPaths breadv = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths breadw = new BreadthFirstDirectedPaths(digraph, w);
         int minLen = Integer.MAX_VALUE;
@@ -99,8 +126,10 @@ public class SAP {
 
                 int tempMin = breadv.distTo(i) + breadw.distTo(i);
 
-                if (tempMin < minLen) {
+                if (tempMin < minLen || (tempMin == minLen && i < ancestor)) {
                     minLen = tempMin;
+                    ancestor = i;
+                } else if (tempMin == minLen) {
                     ancestor = i;
                 }
 
